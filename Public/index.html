@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04070B">
+<meta name="description" content="Sentinel Engineering is a small, independent network and systems engineering practice.">
+<link rel="icon" type="image/png" href="assets/mark.png">
+<title>Sentinel Engineering</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dark network-operations sheet. Header strip, a hero with a live node-and-link canvas behind the copy and the logo in a HUD frame, three capability notes, and contact as a port-style grid. Single dark look on purpose, to match the white-on-black logo. */
+:root {
+  color-scheme: dark;
+  --bg: #04070B;
+  --bg-rgb: 4, 7, 11;
+  --panel: #0A1119;
+  --panel-rgb: 10, 17, 25;
+  --ink: #EAF2F8;
+  --muted: #8EA2B3;
+  --line: #1B2A38;
+  --accent: #35D6FF;
+  --accent-rgb: 53, 214, 255;
+  --on-accent: #04070B;
+  --font-display: "Sora", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+.wrap {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* header */
+.top { border-bottom: 1px solid var(--line); background: var(--bg); }
+.top .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.9rem;
+}
+.brand { display: flex; align-items: center; gap: 0.8rem; min-width: 0; }
+.brand img { height: 2.5rem; width: auto; display: block; flex: none; }
+.name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.label, .tag, .nav {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.nav {
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.9rem;
+  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.nav:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.25); }
+
+/* hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-bottom: 1px solid var(--line);
+}
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: -2; }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(var(--bg-rgb), 0.92) 0%, rgba(var(--bg-rgb), 0.6) 45%, rgba(var(--bg-rgb), 0.1) 100%);
+}
+.hero .wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+  padding-block: clamp(3rem, 8vw, 6.5rem);
+}
+@media (min-width: 56rem) {
+  .hero .wrap { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 3.5rem; }
+}
+.tag { color: var(--accent); margin: 0 0 1.25rem; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.6vw, 3.9rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0 0 1.5rem;
+}
+.lede { max-width: 36rem; color: #C5D3DF; margin: 0 0 2rem; }
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.9rem 1.5rem;
+  transition: box-shadow 0.2s;
+}
+.btn:hover { box-shadow: 0 0 0 1px var(--accent), 0 0 28px rgba(var(--accent-rgb), 0.5); }
+
+/* logo in a HUD frame */
+.panel {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  border: 1px solid var(--line);
+  background-color: rgba(var(--panel-rgb), 0.72);
+  background-image:
+    radial-gradient(60% 60% at 50% 42%, rgba(var(--accent-rgb), 0.13), transparent 72%),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent));
+  background-position: center, 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
+  background-size: 100% 100%, 1.25rem 2px, 2px 1.25rem, 1.25rem 2px, 2px 1.25rem, 1.25rem 2px, 2px 1.25rem, 1.25rem 2px, 2px 1.25rem;
+  background-repeat: no-repeat;
+}
+.panel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 28%;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(var(--accent-rgb), 0.1), transparent);
+  transform: translateY(-100%);
+  animation: scan 7s linear infinite;
+}
+@keyframes scan { to { transform: translateY(420%); } }
+.lockup {
+  display: block;
+  width: 100%;
+  max-width: 32rem;
+  height: auto;
+  margin-inline: auto;
+  filter: drop-shadow(0 0 22px rgba(var(--accent-rgb), 0.3));
+}
+
+/* what we do */
+.do { border-bottom: 1px solid var(--line); }
+.do .wrap { padding-block: clamp(2.5rem, 6vw, 4rem); }
+.label { color: var(--accent); margin: 0 0 1.75rem; }
+.do .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 2rem;
+}
+.do article { border-top: 1px solid var(--line); padding-top: 1.25rem; min-width: 0; }
+.do svg { width: 2.5rem; height: 2.5rem; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; display: block; margin-bottom: 1rem; }
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+.do p { margin: 0; color: var(--muted); }
+
+/* contact */
+.contact .wrap { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.contact h2.section { font-size: clamp(1.75rem, 4vw, 2.25rem); margin-bottom: 1.5rem; }
+.block {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.cell { background: var(--panel); padding: 0.95rem 1rem 1.05rem; min-width: 0; }
+.cell .k {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.4rem;
+}
+.value {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.value.plain { font-family: var(--font-body); font-size: 1rem; }
+.copy {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none;
+  color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.5);
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.copy:hover { background: var(--accent); color: var(--on-accent); }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel::after { animation: none; display: none; }
+  .nav, .btn, .copy { transition: none; }
+}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/mark.png" alt="Sentinel Engineering shield mark" width="38" height="40">
+      <span class="name">Sentinel Engineering</span>
+    </div>
+    <a class="nav" href="#contact">Contact</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <canvas id="net" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div>
+        <p class="tag">Network &amp; systems engineering</p>
+        <h1>Engineering for the systems your business depends on</h1>
+        <p class="lede">Sentinel Engineering is a small, independent practice. We work directly with clients from first conversation to final drawings, so the person who scopes your job is the person who does it. Call or email and you will get a straight answer on what is involved, how long it will take and what it will cost.</p>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+      <div class="panel">
+        <img class="lockup" src="assets/logo.png" alt="Sentinel Engineering logo: a shield filled with circuit traces above the company name" width="1000" height="587">
+      </div>
+    </div>
+  </section>
+
+  <section class="do" aria-label="What we do">
+    <div class="wrap">
+      <p class="label">// What we do</p>
+      <div class="grid">
+        <article>
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="11" cy="9" r="4"/><path d="M11 13v8l8 8h12"/><circle cx="34" cy="29" r="3"/></svg>
+          <h2>Design</h2>
+          <p>Network and systems design from concept to documented, buildable drawings and specifications your team and contractors can work from.</p>
+        </article>
+        <article>
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="9" r="4"/><path d="M20 13v7M20 20l-7 8M20 20l7 8"/><circle cx="11" cy="31" r="3"/><circle cx="29" cy="31" r="3"/></svg>
+          <h2>Assessment</h2>
+          <p>Reviews of existing networks and installations, with clear written findings on what to fix first and what can wait.</p>
+        </article>
+        <article>
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="8" cy="12" r="3.5"/><circle cx="32" cy="12" r="3.5"/><circle cx="20" cy="31" r="3.5"/><path d="M11.5 12h17M10 15l8 13M30 15l-8 13"/></svg>
+          <h2>Project support</h2>
+          <p>Technical input through procurement, installation and commissioning, so the finished system matches the design.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <p class="label">// Contact</p>
+      <h2 class="section">Talk to Sentinel Engineering</h2>
+      <div class="block">
+        <div class="cell">
+          <p class="k">Business</p>
+          <p class="value plain">Sentinel Engineering</p>
+        </div>
+        <div class="cell">
+          <p class="k">Email</p>
+          <p class="value"><span id="email">[email address]</span><button class="copy" type="button" data-target="email">Copy</button></p>
+        </div>
+        <div class="cell">
+          <p class="k">Phone</p>
+          <p class="value"><span id="phone">[phone number]</span><button class="copy" type="button" data-target="phone">Copy</button></p>
+        </div>
+        <div class="cell">
+          <p class="k">Location</p>
+          <p class="value plain">[suburb, state]</p>
+        </div>
+        <div class="cell">
+          <p class="k">Hours</p>
+          <p class="value plain">Mon to Fri, 8:00 am to 5:00 pm</p>
+        </div>
+        <div class="cell">
+          <p class="k">ABN</p>
+          <p class="value">[ABN]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Sentinel Engineering</span>
+    <span>All rights reserved</span>
+  </div>
+</footer>
+
+<script>
+/* copy buttons */
+document.querySelectorAll('.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var done = function () {
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 1600);
+    };
+    var fallback = function () {
+      var r = document.createRange();
+      r.selectNodeContents(el);
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+    };
+    try { navigator.clipboard.writeText(el.textContent).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+
+/* network canvas: drifting nodes drawn as rings (like the logo), links between near neighbours, data pulses along links */
+(function () {
+  var hero = document.getElementById('hero');
+  var cv = document.getElementById('net');
+  if (!hero || !cv || !cv.getContext) return;
+  var ctx = cv.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cs = getComputedStyle(document.documentElement);
+  var A = cs.getPropertyValue('--accent-rgb').trim() || '53, 214, 255';
+  var B = cs.getPropertyValue('--bg-rgb').trim() || '4, 7, 11';
+  var W = 0, H = 0, L = 140, nodes = [], links = [], pulses = [], lastSpawn = 0, raf = 0, visible = true;
+  var mouse = { x: 0, y: 0, on: false };
+
+  function resize() {
+    var r = hero.getBoundingClientRect();
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    L = Math.min(170, Math.max(105, W / 7));
+    var n = Math.min(70, Math.max(18, Math.round(W * H / 15000)));
+    nodes = [];
+    for (var i = 0; i < n; i++) {
+      nodes.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28, r: 2.2 + Math.random() * 1.8 });
+    }
+    pulses = [];
+    draw(0);
+  }
+
+  function step() {
+    for (var i = 0; i < nodes.length; i++) {
+      var p = nodes[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+    }
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+    links.length = 0;
+    ctx.lineWidth = 1;
+    var i, j, a, b, d, dx, dy;
+    for (i = 0; i < nodes.length; i++) {
+      a = nodes[i];
+      for (j = i + 1; j < nodes.length; j++) {
+        b = nodes[j];
+        dx = a.x - b.x; dy = a.y - b.y;
+        d = Math.sqrt(dx * dx + dy * dy);
+        if (d < L) {
+          ctx.strokeStyle = 'rgba(' + A + ',' + ((1 - d / L) * 0.34).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          links.push([i, j]);
+        }
+      }
+    }
+    if (mouse.on) {
+      for (i = 0; i < nodes.length; i++) {
+        a = nodes[i];
+        dx = a.x - mouse.x; dy = a.y - mouse.y;
+        d = Math.sqrt(dx * dx + dy * dy);
+        if (d < L * 1.4) {
+          ctx.strokeStyle = 'rgba(' + A + ',' + ((1 - d / (L * 1.4)) * 0.7).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(a.x, a.y); ctx.stroke();
+        }
+      }
+    }
+    for (i = 0; i < nodes.length; i++) {
+      a = nodes[i];
+      ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.2832);
+      ctx.fillStyle = 'rgb(' + B + ')'; ctx.fill();
+      ctx.strokeStyle = 'rgba(' + A + ',0.75)'; ctx.lineWidth = 1.2; ctx.stroke();
+    }
+    if (!reduce) {
+      if (now - lastSpawn > 420 && links.length && pulses.length < 14) {
+        var l = links[Math.floor(Math.random() * links.length)];
+        pulses.push({ a: l[0], b: l[1], t: 0, s: 0.007 + Math.random() * 0.01 });
+        lastSpawn = now;
+      }
+      ctx.shadowColor = 'rgb(' + A + ')'; ctx.shadowBlur = 12;
+      for (i = pulses.length - 1; i >= 0; i--) {
+        var q = pulses[i];
+        q.t += q.s;
+        if (q.t >= 1) { pulses.splice(i, 1); continue; }
+        var p1 = nodes[q.a], p2 = nodes[q.b];
+        ctx.beginPath();
+        ctx.arc(p1.x + (p2.x - p1.x) * q.t, p1.y + (p2.y - p1.y) * q.t, 2.2, 0, 6.2832);
+        ctx.fillStyle = 'rgb(' + A + ')'; ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  function frame(now) {
+    if (!visible || document.hidden) { raf = 0; return; }
+    step(); draw(now);
+    raf = requestAnimationFrame(frame);
+  }
+  function start() { if (!reduce && !raf && visible && !document.hidden) raf = requestAnimationFrame(frame); }
+
+  hero.addEventListener('pointermove', function (e) {
+    var r = hero.getBoundingClientRect();
+    mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;
+    if (reduce) draw(0);
+  });
+  hero.addEventListener('pointerleave', function () { mouse.on = false; if (reduce) draw(0); });
+  document.addEventListener('visibilitychange', start);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) start(); }).observe(hero);
+  }
+  if ('ResizeObserver' in window) { new ResizeObserver(resize).observe(hero); } else { window.addEventListener('resize', resize); }
+  resize();
+  start();
+})();
+</script>
+</body>
+</html>
